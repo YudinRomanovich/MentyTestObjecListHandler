@@ -5,8 +5,6 @@
 #include "Objects.h"
 #include "ListOfObjects.h"
 
-void saveResultsInFile(ListOfObjects& listOne, std::fstream& fs);
-
 std::ostream& operator<<(std::ostream& os,const Object& object) {
 	os << object.nameOfObject<< ' ' << object.x << ' ' << object.y << ' ' << object.typeOfobject << ' ' << object.now << '\n';
 	return os;
@@ -16,6 +14,8 @@ std::istream& operator>>(std::istream& is, Object& object) {
 	is >> object.nameOfObject >> object.x >> object.y >> object.typeOfobject >> object.now;
 	return is;
 }
+
+void saveResultsInFile(ListOfObjects& listOne, std::fstream& fs);
 
 void readListOfObjects(std::fstream& fs) {
 	do {
