@@ -8,7 +8,7 @@ class ListOfObjects : public Object
 {
 public:
 
-	ListOfObjects() {};
+	ListOfObjects() { listOfNameOfobjects = {}; };
 	~ListOfObjects() {};
 
 	void PrintListOfObjects() {
@@ -18,5 +18,21 @@ public:
 		}
 	}
 
+	void PrintListOfNameOfobjects() {
+		for (const auto& str : listOfNameOfobjects) {
+			std::cout << str << " ";
+		}
+	};
+
+
+	
 	std::vector<Object> listOfObjects;
+
+	std::vector<std::string> listOfNameOfobjects = {};
+	std::vector<std::string> listOfTypeOfobjects;
+	std::vector<double> listOfCoordinateX;
+	std::vector<double> listOfCoordinateY;
+	std::vector<time_t> listOfDateAndTime;
 };
+
+
