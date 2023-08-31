@@ -159,20 +159,28 @@ ListOfObjects sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpLis
 			system("pause");
 			system("cls");
 		case 1:
-			system("cls");
 			sortingListByName(listOne);//сортировка по имени
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
 			break;
 		case 2:
-			system("cls");
 			sortingListByCoordinates(listOne);//сортировка по координатам
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
 			break;
 		case 3:
-			system("cls");
 			sortingListByType(listOne);//сортировка по типу
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
 			break;
 		case 4:
-			system("cls");
 			sortingListByTime(listOne);//сортировка по времени
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
 			break;
 		case 5:
 			saveResultsInFile(listOne, fs);
@@ -189,6 +197,39 @@ ListOfObjects sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpLis
 	}
 }
 	
+ListOfObjects getTheListOfObjectFromAnotherFile(std::fstream& tmpFile, std::fstream& fs, ListOfObjects& tmpList) {
+	std::string pathToTmpFile;
+
+	std::cout << "Enter file name(Example: tmpFile.txt)\t*file must be in directory with main.cpp file*\n";
+	std::cin >> pathToTmpFile;
+	
+	tmpFile.open(pathToTmpFile, std::fstream::in | std::fstream::out | std::fstream::app);
+
+	while (!tmpFile.eof()) {
+		Object temp;
+		tmpFile >> temp;
+		tmpList.listOfObjects.push_back(temp);
+		if (tmpFile.eof()) {
+			break;
+		}
+	}
+	tmpFile.clear();
+	std::cout << "This file has this list of elements: \n";
+	tmpList.PrintListOfObjects();
+	std::cout << "\nDo you want copy this list in main txt file?\n";
+	std::cout << "1. Yes\t2. No\n";
+
+	int choose;
+	std::cin >> choose;
+	switch (choose)
+	{
+	case 1:
+		saveResultsInFile(tmpList, fs);
+	case 2:
+		return tmpList;
+	}
+
+}
 
 int main() {
 
@@ -196,6 +237,7 @@ int main() {
 		std::string pathToFile = "objectList.txt";
 
 		std::fstream fs;
+		std::fstream tmpFile;
 
 		ListOfObjects listOne;
 		ListOfObjects tmpList;
@@ -211,19 +253,22 @@ int main() {
 			std::cout << "1. Read a list of objects from a file\n";
 			std::cout << "2. Add object to the list\n";
 			std::cout << "3. Group objects with sorting within groups\n";
-			std::cout << "4. Save results in file\n\n\n";
+			std::cout << "4. Save results in file\n";
+			std::cout << "5. Append list of objects from another file\n\n\n";
 
-			std::cout << "5. Quit\n";
+
+			std::cout << "6. Quit\n";
 
 			std::cin >> value;
-			while (value <= 0 || value > 5) {
-				std::cout << "Error! Enter a number in the range 1-5\n";
+			while (value <= 0 || value > 6) {
+				std::cout << "Error! Enter a number in the range 1-6\n";
 				std::cin >> value;
 			}
 			if (value == 1) {
 				readListOfObjects(fs);
 			}
 			if (value == 2) {
+				system("cls");
 				addObjectToTheList(listOne,fs);
 			}
 			if (value == 3) {
@@ -233,7 +278,10 @@ int main() {
 			if (value == 4) {
 				saveResultsInFile(listOne, fs);
 			}
-			if (value == 5) {
+			if (value == 5){
+				getTheListOfObjectFromAnotherFile(tmpFile, fs, tmpList);
+			}
+			if (value == 6) {
 				return 0;
 			}
 
