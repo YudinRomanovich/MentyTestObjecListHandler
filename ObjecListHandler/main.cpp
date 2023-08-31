@@ -66,62 +66,12 @@ ListOfObjects getTheListOfObject(std::fstream& fs, ListOfObjects& listOne) {
 	return listOne;
 }
 
-void sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpList, std::fstream& fs) {
-	
-	getTheListOfObject(fs, listOne);
-	//for (auto i = 0; i < listOne.listOfObjects.size(); i++){
-	//	/*for (auto j = 0; j < listOne.listOfObjects[j].nameOfObject.size(); j++)
-	//	{
-	//		
-	//	}*/
-	//	listOne.listOfNameOfobjects.push_back(listOne.listOfObjects[i].nameOfObject);
-	//}
-	//std::sort(listOne.listOfNameOfobjects.begin(), listOne.listOfNameOfobjects.end());
-	//
-	//listOne.PrintListOfNameOfobjects();
-	fs.clear();
-	//for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
-	//	listOne.listOfTypeOfobjects.push_back(listOne.listOfObjects[i].typeOfobject);
-	//}
-	//std::sort(listOne.listOfTypeOfobjects.begin(), listOne.listOfTypeOfobjects.end());
-	//
-	//for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
-	//	listOne.listOfCoordinateX.push_back(listOne.listOfObjects[i].x);
-	//}
-	//std::sort(listOne.listOfCoordinateX.begin(), listOne.listOfCoordinateX.end());
-
-	//for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
-	//	listOne.listOfCoordinateY.push_back(listOne.listOfObjects[i].y);
-	//}
-	//std::sort(listOne.listOfCoordinateY.begin(), listOne.listOfCoordinateY.end());
-
-	//for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
-	//	listOne.listOfDateAndTime.push_back(listOne.listOfObjects[i].now);
-	//}
-	//std::sort(listOne.listOfDateAndTime.begin(), listOne.listOfDateAndTime.end());
-	listOne.PrintListOfObjects();
-	std::cout << "\n\n\n";
-
-
-	for (auto i = 0; i < listOne.listOfObjects.size();){
-		/*if (i == listOne.listOfObjects.size()){
-			tmpList.listOfObjects.push_back(listOne.listOfObjects[i]);
-			break;
-		}
-		if (listOne.listOfObjects[i].nameOfObject[0] == listOne.listOfObjects[i + 1].nameOfObject[0]){
-			i++;
-			continue;
-		}
-		if (listOne.listOfObjects[i].nameOfObject[0] > listOne.listOfObjects[i + 1].nameOfObject[0]) {
-			tmpList.listOfObjects.push_back(listOne.listOfObjects[i+1]);
-		}
-		else if(listOne.listOfObjects[i].nameOfObject[0] < listOne.listOfObjects[i + 1].nameOfObject[0]) {
-			tmpList.listOfObjects.push_back(listOne.listOfObjects[i]);
-		}*/
+ListOfObjects sortingListByName(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size();) {
 		if (i == listOne.listOfObjects.size() - 1) {
 			break;
 		}
-		if (listOne.listOfObjects[i].nameOfObject[0] > listOne.listOfObjects[i+1].nameOfObject[0]) {
+		if (listOne.listOfObjects[i].nameOfObject[0] > listOne.listOfObjects[i + 1].nameOfObject[0]) {
 			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
 			i = 0;
 		}
@@ -129,20 +79,116 @@ void sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpList, std::f
 			i++;
 		}
 	}
-	/*listOne.listOfObjects.clear();
-	for (auto i = 0; i < listOne.listOfObjects.size(); i++){
-		listOne.listOfObjects.push_back(tmpList.listOfObjects[i]);
-	}*/
-
-	listOne.PrintListOfObjects();
-	fs.close();
-	
-	std::fstream file("objectList.txt", std::ios::out | std::ios::trunc);
-	file.close();
-	file.open("objectList.txt", std::fstream::in | std::fstream::out | std::fstream::app);
-
-	saveResultsInFile(listOne, file);
+	return listOne;
 }
+
+ListOfObjects sortingListByCoordinates(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].nameOfObject[0] == listOne.listOfObjects[i + 1].nameOfObject[0]) {
+
+			if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+				std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+				i = 0;
+			}
+		}
+		if (listOne.listOfObjects[i].nameOfObject[0] < listOne.listOfObjects[i + 1].nameOfObject[0]) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+ListOfObjects sortingListByType(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].typeOfobject > listOne.listOfObjects[i + 1].typeOfobject) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if (listOne.listOfObjects[i].typeOfobject <= listOne.listOfObjects[i + 1].typeOfobject) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+ListOfObjects sortingListByTime(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].now > listOne.listOfObjects[i + 1].now) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if (listOne.listOfObjects[i].now <= listOne.listOfObjects[i + 1].now) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+ListOfObjects sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpList, std::fstream& fs) {
+	int choose;
+	while (true) {
+		getTheListOfObject(fs, listOne);
+		fs.clear();
+		std::cout << "\n";
+		std::cout << "***How do you want to sort?***\n\n";
+		std::cout << "0. Show list of objects\n";
+		std::cout << "1. Sorting list by name\n";
+		std::cout << "2. Sorting list by range\n";
+		std::cout << "3. Sorting list by type\n";
+		std::cout << "4. Sorting list by time\n\n";
+		std::cout << "5. Return&Save\n";
+		std::cin >> choose;
+		while (choose < 0 || choose > 5) {
+			std::cout << "Error! Enter a number in the range 1-5\n";
+			std::cin >> choose;
+		}
+
+		switch (choose)
+		{
+		case 0:
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+		case 1:
+			system("cls");
+			sortingListByName(listOne);//сортировка по имени
+			break;
+		case 2:
+			system("cls");
+			sortingListByCoordinates(listOne);//сортировка по координатам
+			break;
+		case 3:
+			system("cls");
+			sortingListByType(listOne);//сортировка по типу
+			break;
+		case 4:
+			system("cls");
+			sortingListByTime(listOne);//сортировка по времени
+			break;
+		case 5:
+			saveResultsInFile(listOne, fs);
+			fs.close();
+
+			std::fstream file("objectList.txt", std::ios::out | std::ios::trunc);
+			file.close();
+			file.open("objectList.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+
+			saveResultsInFile(listOne, file);
+
+			return listOne;
+		}
+	}
+}
+	
 
 int main() {
 
@@ -153,8 +199,6 @@ int main() {
 
 		ListOfObjects listOne;
 		ListOfObjects tmpList;
-
-		listOne.listOfNameOfobjects.reserve(100);
 
 		fs.open(pathToFile, std::fstream::in | std::fstream::out | std::fstream::app);
 
@@ -183,6 +227,7 @@ int main() {
 				addObjectToTheList(listOne,fs);
 			}
 			if (value == 3) {
+				system("cls");
 				sortTheListOfObjects(listOne,tmpList, fs);
 			}
 			if (value == 4) {
