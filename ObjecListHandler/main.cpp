@@ -83,18 +83,17 @@ ListOfObjects sortingListByName(ListOfObjects& listOne) {
 }
 
 ListOfObjects sortingListByCoordinates(ListOfObjects& listOne) {
-	for (auto i = 0; i < listOne.listOfObjects.size(); i++) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
 		if (i == listOne.listOfObjects.size() - 1) {
 			break;
 		}
-		if (listOne.listOfObjects[i].nameOfObject[0] == listOne.listOfObjects[i + 1].nameOfObject[0]) {
+		/*if (listOne.listOfObjects[i].nameOfObject[0] == listOne.listOfObjects[i + 1].nameOfObject[0]) {*/
 
-			if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
-				std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
-				i = 0;
-			}
+		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
 		}
-		if (listOne.listOfObjects[i].nameOfObject[0] < listOne.listOfObjects[i + 1].nameOfObject[0]) {
+		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 <= (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
 			i++;
 		}
 	}
