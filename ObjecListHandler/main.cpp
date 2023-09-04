@@ -87,7 +87,6 @@ ListOfObjects sortingListByCoordinates(ListOfObjects& listOne) {
 		if (i == listOne.listOfObjects.size() - 1) {
 			break;
 		}
-		/*if (listOne.listOfObjects[i].nameOfObject[0] == listOne.listOfObjects[i + 1].nameOfObject[0]) {*/
 
 		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
 			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
@@ -291,5 +290,7 @@ int main() {
 		}
 
 	}
+
+
 	return 0;
 }
