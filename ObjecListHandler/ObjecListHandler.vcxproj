@@ -134,6 +134,9 @@
     <ClInclude Include="ListOfObjects.h" />
     <ClInclude Include="Objects.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="interface.py" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

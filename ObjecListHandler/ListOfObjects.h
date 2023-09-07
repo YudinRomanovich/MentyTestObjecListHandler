@@ -5,26 +5,255 @@
 
 #include "Objects.h"
 
+std::ostream& operator<<(std::ostream& os, const Object& object);
+std::istream& operator>>(std::istream& is, Object& object);
 
-class ListOfObjects : public Object
+class ListOfObjects : private Object
 {
 public:
 
 	ListOfObjects() {};
 	~ListOfObjects() {};
 
-	void PrintListOfObjects() {
-		std::cout << "#Name" << std::setw(12) << std::left << "	 #X"
-			<< std::setw(10) << "#Y"
-			<< std::setw(10) << "#Type"
-			<< std::setw(10) << "#Date"
-			<< std::endl;
-		std::cout << "--------------------------------------------------\n";
-		for (auto i = 0; i < listOfObjects.size(); i++)
-		{
-			
-			std::cout<< std::setw(10)<<listOfObjects[i].nameOfObject<< std::setw(10)<<listOfObjects[i].x << std::setw(10) << listOfObjects[i].y << std::setw(10) << listOfObjects[i].typeOfobject << std::setw(10) << listOfObjects[i].now<<'\n';
-		}
-	}
+	ListOfObjects getTheListOfObject(std::fstream& fs, ListOfObjects& listOne);
+	ListOfObjects sortingListByName(ListOfObjects& listOne);
+	ListOfObjects sortingListByCoordinates(ListOfObjects& listOne);
+	ListOfObjects sortingListByType(ListOfObjects& listOne);
+	ListOfObjects sortingListByTime(ListOfObjects& listOne);
+	ListOfObjects sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpList, std::fstream& fs);
+	ListOfObjects getTheListOfObjectFromAnotherFile(std::fstream& tmpFile, std::fstream& fs, ListOfObjects& tmpList);
+
+	void readListOfObjects(std::fstream& fs);
+	void addObjectToTheList(ListOfObjects& listOne, std::fstream& fs);
+	void saveResultsInFile(ListOfObjects& listOne, std::fstream& fs);
+	void PrintListOfObjects();
+
+private:
 	std::vector<Object> listOfObjects;
 };
+
+inline void ListOfObjects::readListOfObjects(std::fstream& fs) {
+	while (!fs.eof()) {
+		Object temp;
+		fs >> temp;
+		if (fs.eof()) {
+			break;
+		}
+		std::cout << temp;
+	}
+}
+
+inline void ListOfObjects::addObjectToTheList(ListOfObjects& listOne, std::fstream& fs) {
+	Object tempObject;
+	std::cout << "Enter name of object\n";
+	std::cin >> tempObject.nameOfObject;
+	std::cout << "Enter x-coordinate of object\n";
+	std::cin >> tempObject.x;
+	std::cout << "Enter y-coordinate of object\n";
+	std::cin >> tempObject.y;
+	std::cout << "Enter type of object\n";
+	std::cin >> tempObject.typeOfobject;
+
+	listOne.listOfObjects.push_back(tempObject);
+
+	saveResultsInFile(listOne, fs);
+}
+
+inline void ListOfObjects::saveResultsInFile(ListOfObjects& listOne, std::fstream& fs) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); i++)
+	{
+		fs << listOne.listOfObjects[i];
+	}
+}
+
+
+inline void ListOfObjects::PrintListOfObjects() {
+	std::cout << "#Name" << std::setw(12) << std::left << "	 #X"
+		<< std::setw(10) << "#Y"
+		<< std::setw(10) << "#Type"
+		<< std::setw(10) << "#Date"
+		<< std::endl;
+	std::cout << "--------------------------------------------------\n";
+	for (auto i = 0; i < listOfObjects.size(); i++)
+	{
+
+		std::cout << std::setw(10) << listOfObjects[i].nameOfObject << std::setw(10) << listOfObjects[i].x << std::setw(10) << listOfObjects[i].y << std::setw(10) << listOfObjects[i].typeOfobject << std::setw(10) << listOfObjects[i].now << '\n';
+	}
+}
+
+inline ListOfObjects ListOfObjects::getTheListOfObject(std::fstream& fs, ListOfObjects& listOne) {
+	while (!fs.eof()) {
+		Object temp;
+		fs >> temp;
+		if (fs.eof()) {
+			break;
+		}
+		listOne.listOfObjects.push_back(temp);
+
+	}
+	return listOne;
+}
+
+inline ListOfObjects ListOfObjects::sortingListByName(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size();) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].nameOfObject[0] > listOne.listOfObjects[i + 1].nameOfObject[0]) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if (listOne.listOfObjects[i].nameOfObject[0] <= listOne.listOfObjects[i + 1].nameOfObject[0]) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+inline ListOfObjects ListOfObjects::sortingListByCoordinates(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+
+		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 <= (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+inline ListOfObjects ListOfObjects::sortingListByType(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].typeOfobject > listOne.listOfObjects[i + 1].typeOfobject) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if (listOne.listOfObjects[i].typeOfobject <= listOne.listOfObjects[i + 1].typeOfobject) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+inline ListOfObjects ListOfObjects::sortingListByTime(ListOfObjects& listOne) {
+	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+		if (i == listOne.listOfObjects.size() - 1) {
+			break;
+		}
+		if (listOne.listOfObjects[i].now > listOne.listOfObjects[i + 1].now) {
+			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
+			i = 0;
+		}
+		if (listOne.listOfObjects[i].now <= listOne.listOfObjects[i + 1].now) {
+			i++;
+		}
+	}
+	return listOne;
+}
+
+inline ListOfObjects ListOfObjects::sortTheListOfObjects(ListOfObjects& listOne, ListOfObjects& tmpList, std::fstream& fs) {
+	int choose;
+	while (true) {
+		getTheListOfObject(fs, listOne);
+		fs.clear();
+		std::cout << "\n";
+		std::cout << "***How do you want to sort?***\n\n";
+		std::cout << "0. Show list of objects\n";
+		std::cout << "1. Sorting list by name\n";
+		std::cout << "2. Sorting list by range\n";
+		std::cout << "3. Sorting list by type\n";
+		std::cout << "4. Sorting list by time\n\n";
+		std::cout << "5. Return&Save\n";
+		std::cin >> choose;
+		while (choose < 0 || choose > 5) {
+			std::cout << "Error! Enter a number in the range 1-5\n";
+			std::cin >> choose;
+		}
+
+		switch (choose)
+		{
+		case 0:
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+		case 1:
+			sortingListByName(listOne);//сортировка по имени
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+			break;
+		case 2:
+			sortingListByCoordinates(listOne);//сортировка по координатам
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+			break;
+		case 3:
+			sortingListByType(listOne);//сортировка по типу
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+			break;
+		case 4:
+			sortingListByTime(listOne);//сортировка по времени
+			listOne.PrintListOfObjects(); //вывод списка обьектов из списка
+			system("pause");
+			system("cls");
+			break;
+		case 5:
+			saveResultsInFile(listOne, fs);
+			fs.close();
+
+			std::fstream file("objectList.txt", std::ios::out | std::ios::trunc);
+			file.close();
+			file.open("objectList.txt", std::fstream::in | std::fstream::out | std::fstream::app);
+
+			saveResultsInFile(listOne, file);
+
+			return listOne;
+		}
+	}
+}
+
+inline ListOfObjects ListOfObjects::getTheListOfObjectFromAnotherFile(std::fstream& tmpFile, std::fstream& fs, ListOfObjects& tmpList) {
+	std::string pathToTmpFile;
+
+	std::cout << "Enter file name(Example: tmpFile.txt)\t*file must be in directory with main.cpp file*\n";
+	std::cin >> pathToTmpFile;
+
+	tmpFile.open(pathToTmpFile, std::fstream::in | std::fstream::out | std::fstream::app);
+
+	while (!tmpFile.eof()) {
+		Object temp;
+		tmpFile >> temp;
+		tmpList.listOfObjects.push_back(temp);
+		if (tmpFile.eof()) {
+			break;
+		}
+	}
+	tmpFile.clear();
+	std::cout << "This file has this list of elements: \n";
+	tmpList.PrintListOfObjects();
+	std::cout << "\nDo you want copy this list in main txt file?\n";
+	std::cout << "1. Yes\t2. No\n";
+
+	int choose;
+	std::cin >> choose;
+	switch (choose)
+	{
+	case 1:
+		saveResultsInFile(tmpList, fs);
+	case 2:
+		return tmpList;
+	}
+
+}
+
