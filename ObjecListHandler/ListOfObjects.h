@@ -3,6 +3,8 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <unordered_map>
+
 
 #include "Objects.h"
 
@@ -15,6 +17,8 @@ public:
 
 	ListOfObjects() {};
 	~ListOfObjects() {};
+
+	std::unordered_map<char, std::vector<std::string>> groupStringsByFirstLetter(ListOfObjects& listOne);
 
 	ListOfObjects getTheListOfObject(std::fstream& fs, ListOfObjects& listOne);
 	ListOfObjects sortingListByName(ListOfObjects& listOne);
@@ -83,6 +87,24 @@ inline void ListOfObjects::PrintListOfObjects() {
 	}
 }
 
+inline std::unordered_map<char, std::vector<std::string>> ListOfObjects::groupStringsByFirstLetter(ListOfObjects& listOne)
+{
+	std::unordered_map<char, std::vector<std::string>> groupedStrings;
+
+	for (auto str = 0; str < listOne.listOfObjects.size(); str++) {
+		char firstLetter = listOne.listOfObjects[str].GetTheNameOfObject()[0];
+		groupedStrings[firstLetter].push_back(listOne.listOfObjects[str].GetTheNameOfObject());
+	}
+	for (const auto& pair : groupedStrings) {
+		std::cout << "'" << pair.first << "': ";
+		for (const std::string& str : pair.second) {
+			std::cout << str << " ";
+		}
+		std::cout << std::endl;
+	}
+	return groupedStrings;
+}
+
 inline ListOfObjects ListOfObjects::getTheListOfObject(std::fstream& fs, ListOfObjects& listOne) {
 	while (!fs.eof()) {
 		Object temp;
@@ -112,7 +134,7 @@ inline ListOfObjects ListOfObjects::sortingListByName(ListOfObjects& listOne) {
 	return listOne;
 }
 
-inline ListOfObjects ListOfObjects::sortingListByCoordinates(ListOfObjects& listOne) { //TODO :: add player to formula
+inline ListOfObjects ListOfObjects::sortingListByCoordinates(ListOfObjects& listOne) { 
 	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
 
 		if (i == listOne.listOfObjects.size() - 1) {
@@ -176,11 +198,13 @@ inline ListOfObjects ListOfObjects::sortTheListOfObjects(ListOfObjects& listOne,
 		std::cout << "1. Sorting list by name\n";
 		std::cout << "2. Sorting list by range\n";
 		std::cout << "3. Sorting list by type\n";
-		std::cout << "4. Sorting list by time\n\n";
-		std::cout << "5. Return&Save\n";
+		std::cout << "4. Sorting list by time\n";
+		std::cout << "5. Group list by first letter\n\n";
+
+		std::cout << "6. Return&Save\n";
 		std::cin >> choose;
-		while (choose < 0 || choose > 5) {
-			std::cout << "Error! Enter a number in the range 1-5\n";
+		while (choose < 0 || choose > 6) {
+			std::cout << "Error! Enter a number in the range 1-6\n";
 			std::cin >> choose;
 		}
 
@@ -215,6 +239,11 @@ inline ListOfObjects ListOfObjects::sortTheListOfObjects(ListOfObjects& listOne,
 			system("cls");
 			break;
 		case 5:
+			listOne.groupStringsByFirstLetter(listOne);
+			system("pause");
+			system("cls");
+			break;
+		case 6:
 			saveResultsInFile(listOne, fs);
 			fs.close();
 

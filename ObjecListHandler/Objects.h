@@ -22,6 +22,9 @@ public:
 		auto now = std::chrono::system_clock::now();
 	};
 
+	std::string GetTheNameOfObject() {
+		return nameOfObject;
+	}
 	
 private:
 	time_t now = time(0);
