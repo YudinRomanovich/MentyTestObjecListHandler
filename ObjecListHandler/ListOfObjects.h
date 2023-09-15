@@ -2,6 +2,7 @@
 #include<vector>
 #include <iostream>
 #include <iomanip>
+#include <cmath>
 
 #include "Objects.h"
 
@@ -30,6 +31,7 @@ public:
 
 private:
 	std::vector<Object> listOfObjects;
+	Object Player;
 };
 
 inline void ListOfObjects::readListOfObjects(std::fstream& fs) {
@@ -110,17 +112,21 @@ inline ListOfObjects ListOfObjects::sortingListByName(ListOfObjects& listOne) {
 	return listOne;
 }
 
-inline ListOfObjects ListOfObjects::sortingListByCoordinates(ListOfObjects& listOne) {
+inline ListOfObjects ListOfObjects::sortingListByCoordinates(ListOfObjects& listOne) { //TODO :: add player to formula
 	for (auto i = 0; i < listOne.listOfObjects.size(); ) {
+
 		if (i == listOne.listOfObjects.size() - 1) {
 			break;
 		}
 
-		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 > (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+		double range1 = pow((pow(listOne.listOfObjects[i].x - Player.x, 2) + pow(listOne.listOfObjects[i].y - Player.y, 2)), 0.5);
+		double range2 = pow((pow(listOne.listOfObjects[i+1].x - Player.x, 2) + pow(listOne.listOfObjects[i+1].y - Player.y, 2)), 0.5);
+		
+		if (range1 > range2) {
 			std::swap(listOne.listOfObjects[i], listOne.listOfObjects[i + 1]);
 			i = 0;
 		}
-		if ((listOne.listOfObjects[i].x + listOne.listOfObjects[i].y) / 2 <= (listOne.listOfObjects[i + 1].x + listOne.listOfObjects[i + 1].y) / 2) {
+		if (range1 <= range2) {
 			i++;
 		}
 	}
@@ -257,3 +263,12 @@ inline ListOfObjects ListOfObjects::getTheListOfObjectFromAnotherFile(std::fstre
 
 }
 
+std::ostream& operator<<(std::ostream& os, const Object& object) {
+	os << object.nameOfObject << ' ' << object.x << ' ' << object.y << ' ' << object.typeOfobject << ' ' << object.now << '\n';
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, Object& object) {
+	is >> object.nameOfObject >> object.x >> object.y >> object.typeOfobject >> object.now;
+	return is;
+}

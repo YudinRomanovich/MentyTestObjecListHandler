@@ -4,9 +4,6 @@
 #include <ctime>
 #include <chrono>
 
-
-
-
 class Object {
 public:
 
@@ -24,6 +21,7 @@ public:
 		this->typeOfobject = typeOfobject;
 		auto now = std::chrono::system_clock::now();
 	};
+
 	
 private:
 	time_t now = time(0);

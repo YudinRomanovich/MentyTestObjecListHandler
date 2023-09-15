@@ -131,7 +131,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Group.h" />
     <ClInclude Include="ListOfObjects.h" />
+    <ClInclude Include="MainWindow.h" />
     <ClInclude Include="Objects.h" />
   </ItemGroup>
   <ItemGroup>
